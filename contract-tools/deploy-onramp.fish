@@ -1,3 +1,6 @@
+set -g fish_trace 1
+
+
 #Before calling set: 
 #     ONRAMP_CODE_PATH,
 #     LOTUS_EXEC_PATH,

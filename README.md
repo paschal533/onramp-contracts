@@ -27,13 +27,20 @@ Empowering developers to build dApps that write data to the filecoin network
 export ONRAMP_CODE_PATH=$(pwd)
 export LOTUS_EXEC_PATH=$(pwd)/../../filecoin-project/lotus
 export BOOST_EXEC_PATH=$(pwd)/../../filecoin-project/boost
-export XCHAIN_KEY_PATH=~/dev/snissn/onramp-contracts/xchain_key.json
+export XCHAIN_KEY_PATH=/home/mikers/dev/snissn/onramp-contracts/xchain_key.json/UTC--2024-10-01T21-31-48.090887441Z--1d0aa8533534a9da983469bae2de09eb86ee65fa
 export XCHAIN_PASSPHRASE=password
-export XCHAIN_ETH_API="http://127.0.0.1:1234"
-export XCHAIN_ETH_API="https://rpc.ankr.com/filecoin_testnet"
+export XCHAIN_ETH_API="http://127.0.0.1:1234/rpc/v1"
 
 
 9. install fish
 11. run fish shell
 12. source fish install script: `cd contract-tools; source deploy-onramp.fish`
 13. run deploy script `deploy-onramp`
+
+
+
+## Shashank notes
+
+https://gist.github.com/lordshashank/fb2fbd53b5520a862bd451e3603b4718
+
+https://github.com/lordshashank/filecoin-deals       
