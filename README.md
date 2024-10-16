@@ -7,8 +7,8 @@ Empowering developers to build dApps that write data to the filecoin network
 
 1. `forge install`
 2. set up gvm and use go 1.22 `gvm install go1.22; gvm use go1.22`
-3. download calibnet export `aria2c -x5 https://forest-archive.chainsafe.dev/latest/calibnet` or `wget https://forest-archive.chainsafe.dev/latest/calibnet`
-./lotus daemon --remove-existing-chain --halt-after-import --import-snapshot ./forest_snapshot_calibnet_2024-10-01_height_2016336.forest.car.zst    && LOTUS_FEVM_ENABLEETHRPC=true ./lotus daemon
+3. download calibnet export `aria2c -x5 https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst` or `wget https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst`
+./lotus daemon --remove-existing-chain --halt-after-import --import-snapshot ./calibnet.car.zst && LOTUS_FEVM_ENABLEETHRPC=true ./lotus daemon
 
 
 4. build onramp: `cd contract-tools/xchain; go build;`
