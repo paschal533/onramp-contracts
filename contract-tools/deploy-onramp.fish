@@ -1,4 +1,4 @@
-set -g fish_trace 1
+#set -g fish_trace 1
 
 
 #Before calling set: 
