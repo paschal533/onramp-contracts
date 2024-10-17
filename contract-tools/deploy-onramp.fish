@@ -131,25 +131,25 @@ function deploy-tokens
 
 	 ascii-five
 	 echo -e "~$0.05~$0.05~ 'NICKLE' ~$0.05~$0.05~\n"
-	 set nickleCreate (cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcNickle)
+	 set nickleCreate (cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcNickle)
 	 string join \n $nickleCreate
 	 echo $nickleCreate[1..3]
 	 set nickleAddr (parse-address-cast-create $nickleCreate)
-	 cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $nickleAddr $approveCallData
+	 cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $nickleAddr $approveCallData
 
 	 ascii-shell
 	 echo -e "~#!~#!~ 'SHELL' ~#!~#!~\n"	 
-	 set cowryCreate (cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcCowry)
+	 set cowryCreate (cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcCowry)
      string join \n $cowryCreate
 	 set cowryAddr (parse-address-cast-create $cowryCreate)
-	 cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $cowryAddr $approveCallData
+	 cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $cowryAddr $approveCallData
 
 	 ascii-union-jack	 
 	 echo -e "~#L~#L~ 'NEWTON' ~#L~#L~\n"
-	 set poundCreate (cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcPound) 
+	 set poundCreate (cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API --create $bcPound) 
 	 string join \n $poundCreate
 	 set poundAddr (parse-address-cast-create $poundCreate)
-	 cast send --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $poundAddr $approveCallData
+	 cast send --gas-limit 10000000000 --keystore $XCHAIN_KEY_PATH --password "$XCHAIN_PASSPHRASE" --rpc-url $XCHAIN_ETH_API $poundAddr $approveCallData
 end
 
 # Some ASCII logos to give our erc20s character
