@@ -30,6 +30,7 @@ export BOOST_EXEC_PATH=$(pwd)/../../filecoin-project/boost
 export XCHAIN_KEY_PATH=/home/mikers/dev/snissn/onramp-contracts/xchain_key.json/UTC--2024-10-01T21-31-48.090887441Z--1d0aa8533534a9da983469bae2de09eb86ee65fa
 export XCHAIN_PASSPHRASE=password
 export XCHAIN_ETH_API="http://127.0.0.1:1234/rpc/v1"
+export MINER_ADDRESS=t01013
 
 
 9. install fish
