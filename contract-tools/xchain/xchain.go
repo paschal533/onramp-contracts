@@ -517,7 +517,6 @@ func (a *aggregator) runAggregate(ctx context.Context) error {
 			})
 			if err != nil {
 				log.Printf("error creating aggregate: %s", err)
-				log.Printf("skipping offer %d, size %d exceeds max PODSI packable size %d", latestEvent.OfferID, latestEvent.Offer.Size, a.targetDealSize)
 				continue
 			}
 			// TODO: in production we'll maybe want to move data from buffer before we commit to storing it.
@@ -1021,21 +1020,21 @@ func LoadAbi(path string) (*abi.ABI, error) {
 
 func encodeChainID(chainID *big.Int) ([]byte, error) {
     // Define the ABI arguments
-    uint256Type, err := abi.NewType("uint256", "", nil)
-    if err != nil {
-        return nil, fmt.Errorf("failed to create uint256 type: %w", err)
-    }
-
+	uint256Type, err := abi.NewType("uint256", "", nil)
+	if err != nil {
+	    return nil, fmt.Errorf("failed to create uint256 type: %w", err)
+		
+	
     arguments := abi.Arguments{
-        {Type: uint256Type}, // chainID is a uint256 in Solidity
-    }
-
+	    {Type: uint256Type}, // chainID is a uint256 in Solidity
+		
+	
     // Pack the chainID into a byte array
-    data, err := arguments.Pack(chainID)
-    if err != nil {
-        return nil, fmt.Errorf("failed to encode chainID: %w", err)
-    }
-
+	data, err := arguments.Pack(chainID)
+	if err != nil {
+	    return nil, fmt.Errorf("failed to encode chainID: %w", err)
+		
+	
     return data, nil
-}
+	
 

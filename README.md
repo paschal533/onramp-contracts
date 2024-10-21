@@ -8,7 +8,7 @@ Empowering developers to build dApps that write data to the filecoin network
 1. `forge install`
 2. set up gvm and use go 1.22.7 `gvm install go1.22.7; gvm use go1.22.7`
 3. download calibnet export `aria2c -x5 https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst` or `wget https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst`
-./lotus daemon --remove-existing-chain --halt-after-import --import-snapshot ./calibnet.car.zst && LOTUS_FEVM_ENABLEETHRPC=true ./lotus daemon
+./lotus daemon --remove-existing-chain --halt-after-import --import-snapshot ./calibnet.car.zst && LOTUS_FEVM_ENABLEETHRPC=true LOTUS_EVENTS_ENABLEACTOREVENTSAPI=true ./lotus daemon
 
 
 4. build onramp: `cd contract-tools/xchain; go build;`
@@ -37,6 +37,37 @@ export MINER_ADDRESS=t01013
 11. run fish shell
 12. source fish install script: `cd contract-tools; source deploy-onramp.fish`
 13. run deploy script `deploy-onramp`
+
+This should create a config written to ~/.xchain/config.json
+
+## Running xchain
+
+0. set environment variables like above but change
+
+export XCHAIN_ETH_API="ws://127.0.0.1:1234/rpc/v1"
+update xhcain config with ws url
+
+
+modify xchain config to set TargetAggSize to a value larger than the files you are testing with ie 327680 for 10 files x 32k each
+
+
+set up car utility
+```
+go install github.com/ipld/go-car/cmd/car@latest
+```
+
+set up stream-commp util
+```
+go install github.com/filecoin-project/go-fil-commp-hashhash/cmd/stream-commp@latest
+```
+
+1. build xchain `./contract-tools/xchain$ go build`
+2. run xchain server
+3. use xchain client to upload data using one of the test token
+```
+/onramp-contracts/contract-tools$ ./client.bash screenshot.png 0xaEE9C9E8E4b40665338BD8374D8D473Bd014D1A1 1
+```
+
 
 
 

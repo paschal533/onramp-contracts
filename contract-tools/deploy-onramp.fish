@@ -82,7 +82,8 @@ function deploy-onramp
 	cd $ONRAMP_CODE_PATH
 	jq -c '.abi' out/OnRamp.sol/OnRampContract.json > ~/.xchain/onramp-abi.json
 
-	jo -a (jo -- ChainID=31415926 Api="$XCHAIN_ETH_API" -s OnRampAddress="$onrampAddr" \
+    # chain id and lotus api url is hard coded and will be a source of bugs when moved away from calibnet
+	jo -a (jo -- ChainID=314159 Api="$XCHAIN_ETH_API" -s OnRampAddress="$onrampAddr" \
 		KeyPath="$XCHAIN_KEY_PATH" ClientAddr="$clientAddr" OnRampABIPath=~/.xchain/onramp-abi.json \
 		BufferPath=~/.xchain/buffer BufferPort=5077 ProviderAddr="$MINER_ADDRESS" \
 		LotusAPI="http://localhost:1234" -s ProverAddr="$proverAddr" \
