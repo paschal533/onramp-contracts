@@ -1019,22 +1019,21 @@ func LoadAbi(path string) (*abi.ABI, error) {
 }
 
 func encodeChainID(chainID *big.Int) ([]byte, error) {
-    // Define the ABI arguments
+	// Define the ABI arguments
 	uint256Type, err := abi.NewType("uint256", "", nil)
 	if err != nil {
-	    return nil, fmt.Errorf("failed to create uint256 type: %w", err)
-		
-	
-    arguments := abi.Arguments{
-	    {Type: uint256Type}, // chainID is a uint256 in Solidity
-		
-	
-    // Pack the chainID into a byte array
+		return nil, fmt.Errorf("failed to create uint256 type: %w", err)
+	}
+
+	arguments := abi.Arguments{
+		{Type: uint256Type}, // chainID is a uint256 in Solidity
+	}
+
+	// Pack the chainID into a byte array
 	data, err := arguments.Pack(chainID)
 	if err != nil {
-	    return nil, fmt.Errorf("failed to encode chainID: %w", err)
-		
-	
-    return data, nil
-	
+		return nil, fmt.Errorf("failed to encode chainID: %w", err)
+	}
 
+	return data, nil
+}
