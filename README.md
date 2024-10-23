@@ -17,7 +17,7 @@ Overal, contracts should be deployed on the source chain and Filecoin are listed
 - Filecoin
     - DealClientAxl from `Prover-Axelar.sol`
 
-We are using hardhat to deploy contracts on both Filecoin & Linea. 
+We will use hardhat to deploy contracts on both Filecoin & Linea. 
 1. clone this repo & install all dependencies
     ```
     git clone https://github.com/FIL-Builders/onramp-contracts.git
@@ -26,8 +26,8 @@ We are using hardhat to deploy contracts on both Filecoin & Linea.
     npm intall --force
     ```
 1. re-name `.env.example` to `.env` and add the private key of the deployer wallet.
-1. make sure the chain configs are correct in `hardhat.config.ts`
-1. compile smart contracts
+1. make sure the chain configs are correct in `hardhat.config.ts`. If the your desired chain config is missing, you will need to add it in the `hardhat.config.ts`.
+1. compile smart contracts.
     ```
     npx hardhat compile
     ```
@@ -35,17 +35,27 @@ We are using hardhat to deploy contracts on both Filecoin & Linea.
     ```
     npx hardhat deploy --tags Filecoin --network calibration
     ```
-1. deploy OnRampContract & AxelarBridge to the Linea network. Make sure you have test token LineaETH in your wallet 
+1. deploy OnRampContract & AxelarBridge to the Linea network. Make sure you have test token LineaETH in your wallet.
     ```
     npx hardhat deploy --tags SoureChain --network linea
     ```
-1. After the contracts are successfully deploy on both networks. You need to record three smart contracts address in `.env` for the following configuration.
-1. To make contracts on different networks knows how to process crosschain calls coming from Axelar, we need to wire those contracts together. 
+1. After the contracts are successfully deploy on both networks. You need to add three smart contracts address in `.env` for the following configuration.
     ```
-    npx hardhat run deploy/3_config_Filecoin.ts --network calibration
-    npx hardhat run deploy/4_config_Srcchain.ts --network linea
+    DEPLOYER_PRIVATE_KEY=
+    PROVER_CONTRACT_ADDRESS_DEST_CHAIN=
+    ONRAMP_CONTRACT_ADDRESS_SRC_CHAIN=
+    ORACLE_CONTRACT_ADDRESS_SRC_CHAIN=
     ```
-
+1. Wire those contracts together to process cross-chain calls. 
+    - **On Filecoin**: setting up the supported source chains. 
+        ```
+        npx hardhat run deploy/3_config_Filecoin.ts --network calibration
+        ```
+    - **On source chain**: connecting Oracle & Onramp contracts; Then config crosss-chain messages sender and receiver so Oracle contracts knows how to process cross-chain calls.
+        ```
+        npx hardhat run deploy/4_config_Srcchain.ts --network linea
+        ```
+Once you finished the above steps, you have deployed a set of onramp contracts to support cross-chain storage process from Linea to Filecoin.
 ### Setting up projects
 1. `forge install`
 2. set up gvm and use go 1.22.7 `gvm install go1.22.7; gvm use go1.22.7`
