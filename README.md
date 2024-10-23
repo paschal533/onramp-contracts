@@ -2,10 +2,50 @@
 
 Empowering developers to build dApps that write data from different blockchain to the filecoin network.
 
+The following diagram shows the workflow of data onramp running on other L1/L2 (we are using Linea as an example). 
+
 
 ## Installation
 
 ### Deploying smart contracts with Hardhat
+The data onramp project port Filecoin storage capacity to any other blockchain using smart contracts. To achieve this cross-chain storage solution, we need to deploy a set of contracts on Filecoin and any other L1/L2 source chain. 
+
+Overal, contracts should be deployed on the source chain and Filecoin are listed as below.
+- Source Chain
+    - OnRampContract from `Onramp.sol`
+    - AxelarBridge from `Oracle.sol`
+- Filecoin
+    - DealClientAxl from `Prover-Axelar.sol`
+
+We are using hardhat to deploy contracts on both Filecoin & Linea. 
+1. clone this repo & install all dependencies
+    ```
+    git clone https://github.com/FIL-Builders/onramp-contracts.git
+
+    cd onramp-contracts
+    npm intall --force
+    ```
+1. re-name `.env.example` to `.env` and add the private key of the deployer wallet.
+1. make sure the chain configs are correct in `hardhat.config.ts`
+1. compile smart contracts
+    ```
+    npx hardhat compile
+    ```
+1. deploy DealClientAxl contract to the Filecoin network. Ensure you have enought tFIL to cover the gas fee for smart contract deployment in your wallet.
+    ```
+    npx hardhat deploy --tags Filecoin --network calibration
+    ```
+1. deploy OnRampContract & AxelarBridge to the Linea network. Make sure you have test token LineaETH in your wallet 
+    ```
+    npx hardhat deploy --tags SoureChain --network linea
+    ```
+1. After the contracts are successfully deploy on both networks. You need to record three smart contracts address in `.env` for the following configuration.
+1. To make contracts on different networks knows how to process crosschain calls coming from Axelar, we need to wire those contracts together. 
+    ```
+    npx hardhat run deploy/3_config_Filecoin.ts --network calibration
+    npx hardhat run deploy/4_config_Srcchain.ts --network linea
+    ```
+
 ### Setting up projects
 1. `forge install`
 2. set up gvm and use go 1.22.7 `gvm install go1.22.7; gvm use go1.22.7`
@@ -45,11 +85,11 @@ This should create a config written to ~/.xchain/config.json
 
 ### Running xchain
 
-0. set environment variables like above but change
-
+set environment variables like above but change
+```
 export XCHAIN_ETH_API="ws://127.0.0.1:1234/rpc/v1"
 update xhcain config with ws url
-
+```
 
 modify xchain config to set TargetAggSize to a value larger than the files you are testing with ie 327680 for 10 files x 32k each
 
@@ -64,12 +104,13 @@ set up stream-commp util
 go install github.com/filecoin-project/go-fil-commp-hashhash/cmd/stream-commp@latest
 ```
 
+
 1. build xchain `./contract-tools/xchain$ go build`
 2. run xchain server
 3. use xchain client to upload data using one of the test token
-```
-/onramp-contracts/contract-tools$ ./client.bash screenshot.png 0xaEE9C9E8E4b40665338BD8374D8D473Bd014D1A1 1
-```
+    ```
+    /onramp-contracts/contract-tools$ ./client.bash screenshot.png 0xaEE9C9E8E4b40665338BD8374D8D473Bd014D1A1 1
+    ```
 
 
 
