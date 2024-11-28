@@ -49,25 +49,18 @@ We will use hardhat to deploy contracts on both Filecoin & Linea.
 1. Wire those contracts together to process cross-chain calls. 
     - **On Filecoin**: setting up the supported source chains. 
         ```
-        npx hardhat run deploy/3_config_Filecoin.ts --network calibration
+        npx hardhat run scripts/3_config_Filecoin.ts --network calibration
         ```
     - **On source chain**: connecting Oracle & Onramp contracts; Then config crosss-chain messages sender and receiver so Oracle contracts knows how to process cross-chain calls.
         ```
-        npx hardhat run deploy/4_config_Srcchain.ts --network linea
+        npx hardhat run scripts/4_config_Srcchain.ts --network linea
         ```
 Once you finished the above steps, you have deployed a set of onramp contracts to support cross-chain storage process from Linea to Filecoin.
 ### Setting up projects
 1. `forge install`
-2. set up gvm and use go 1.22.7 `gvm install go1.22.7; gvm use go1.22.7`
-3. download calibnet export `aria2c -x5 https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst` or `wget https://forest-archive.chainsafe.dev/latest/calibnet -o calibnet.car.zst` and run the following command to start calibration:
-    ```
-    ./lotus daemon --remove-existing-chain --halt-after-import --import-snapshot ./calibnet.car.zst && LOTUS_FEVM_ENABLEETHRPC=true LOTUS_EVENTS_ENABLEACTOREVENTSAPI=true ./lotus daemon
-    ```
-4. build onramp: `cd contract-tools/xchain; go build;`
-5. download lotus and boost. if this repo is checked out to `~/dev/snissn/onramp-contracts/` then for the environment variables set in the next step check out boost and lotus in the folder `~/dev/filecoin-project/lotus` and `~/dev/filecoin-project/boost` 
-6. build lotus for calibnet `cd ~/dev/filecoin-project/lotus; make calibnet`
-7. build boost for calibnet `cd ~/dev/filecoin-project/boost; make calibnet`
-8. create xchain keys
+1. set up gvm and use go 1.22.7 `gvm install go1.22.7; gvm use go1.22.7`
+1. build onramp: `cd contract-tools/xchain; go build;`
+1. create xchain keys
     - install geth http://adam.schmideg.net/go-ethereum/install-and-build/Installing-Geth
     - creating new account
         ```
@@ -76,7 +69,7 @@ Once you finished the above steps, you have deployed a set of onramp contracts t
         /home/mikers/dev/snissn/onramp-contracts/xchain_key.json/UTC--2024-10-01T21-31-48.090887441Z--1d0aa8533534a9da983469bae2de09eb86ee65fa
         ```
 
-9. set environment variables
+1. set environment variables
     ```
     export ONRAMP_CODE_PATH=$(pwd)
     export LOTUS_EXEC_PATH=$(pwd)/../../filecoin-project/lotus
@@ -86,10 +79,6 @@ Once you finished the above steps, you have deployed a set of onramp contracts t
     export XCHAIN_ETH_API="http://127.0.0.1:1234/rpc/v1"
     export MINER_ADDRESS=t01013
     ```
-9. install fish
-11. run fish shell
-12. source fish install script: `cd contract-tools; source deploy-onramp.fish`
-13. run deploy script `deploy-onramp`
 
 This should create a config written to ~/.xchain/config.json
 
@@ -121,9 +110,6 @@ go install github.com/filecoin-project/go-fil-commp-hashhash/cmd/stream-commp@la
     ```
     /onramp-contracts/contract-tools$ ./client.bash screenshot.png 0xaEE9C9E8E4b40665338BD8374D8D473Bd014D1A1 1
     ```
-
-
-
 
 ## Shashank notes
 
