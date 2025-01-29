@@ -1,13 +1,16 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+
+import { HardhatUserConfig } from "hardhat/config";
+
 import "dotenv/config";
+
 import "hardhat-deploy";
-import * as dotenv from "dotenv";
 
-dotenv.config();
+const deployerPrivateKey = process.env.DEPLOYER_PRIVATE_KEY;
 
-const deployerPrivateKey =
-  process.env.DEPLOYER_PRIVATE_KEY;
+if (!deployerPrivateKey) {
+  throw new Error("Please set DEPLOYER_PRIVATE_KEY in your .env file");
+}
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -15,7 +18,6 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
         runs: 200,
       },
     },
@@ -25,8 +27,15 @@ const config: HardhatUserConfig = {
       default: 0, // Use the first account as deployer
     },
   },
-  defaultNetwork: "calibration",
+  defaultNetwork: "calibration", // Use Hardhat network for tests
   networks: {
+    hardhat: {
+      mining: {
+        auto: true,
+        interval: 0
+      },
+      chainId: 314159, // Default chainId for Hardhat's local network
+    },
     calibration: {
       url: "https://api.calibration.node.glif.io/rpc/v1",
       accounts: [deployerPrivateKey],
@@ -35,8 +44,11 @@ const config: HardhatUserConfig = {
       url: "https://rpc.sepolia.linea.build",
       chainId: 59141,
       accounts: [deployerPrivateKey],
-    }
-  }
+    },
+  },
+  mocha: {
+    timeout: 100000
+  },
 };
 
 export default config;
