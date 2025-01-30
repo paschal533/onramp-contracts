@@ -49,6 +49,37 @@ Overall, contracts should be deployed on the source chain and Filecoin are liste
 - Filecoin
     - DealClientAxl from `Prover-Axelar.sol`
 
+## Project Structure
+
+```
+ 
+OnRamp-Contracts/
+├── contract-tools
+|   │── xchain
+|   │── client.bash
+|   │── deploy-onramp.fish
+|   │── easy-host.bash
+|   │── rand-files.bash
+├── contracts
+|   │── destChain
+|   │── sorceChain
+|   │── testHelperContracts
+|   │── Cid.sol
+|   │── Const.sol
+|   │── Token.sol
+│── deploy
+│── lib
+│── test
+│── .env.example
+│── README.md
+│── package.json
+└── ...
+├── LICENSE
+├── package.json
+├── README.md
+└── ...
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -180,38 +211,6 @@ xchain server
 
 - [Demo Application Repository](https://github.com/FIL-Builders/onrampDemo)
 - [xChain Client Documentation](https://docs.xchainjs.org/xchain-client/)
-
-## Project Structure
-
-```
- 
-OnRamp-Contracts/
-├── contract-tools
-|   │── xchain
-|   │── client.bash
-|   │── deploy-onramp.fish
-|   │── easy-host.bash
-|   │── rand-files.bash
-├── contracts
-|   │── destChain
-|   │── sorceChain
-|   │── testHelperContracts
-|   │── Cid.sol
-|   │── Const.sol
-|   │── Token.sol
-│── deploy
-│── lib
-│── test
-│── .env.example
-│── README.md
-│── package.json
-└── ...
-├── LICENSE
-├── package.json
-├── README.md
-└── ...
-```
-
 
 ## Contributing
 
