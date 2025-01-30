@@ -8,7 +8,6 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0
 
 Must be one of the following:
 
-- **build**: Related to the build process (e.g. pre-commit, npm, pip)
 - **ci**: CI configuration (e.g. GitHub Actions)
 - **docs**: Documentation
 - **feat**: Adding a feature
