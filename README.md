@@ -181,6 +181,38 @@ xchain server
 - [Demo Application Repository](https://github.com/FIL-Builders/onrampDemo)
 - [xChain Client Documentation](https://docs.xchainjs.org/xchain-client/)
 
+## Project Structure
+
+```
+ 
+OnRamp-Contracts/
+├── contract-tools
+|   │── xchain
+|   │── client.bash
+|   │── deploy-onramp.fish
+|   │── easy-host.bash
+|   │── rand-files.bash
+├── contracts
+|   │── destChain
+|   │── sorceChain
+|   │── testHelperContracts
+|   │── Cid.sol
+|   │── Const.sol
+|   │── Token.sol
+│── deploy
+│── lib
+│── test
+│── .env.example
+│── README.md
+│── package.json
+└── ...
+├── LICENSE
+├── package.json
+├── README.md
+└── ...
+```
+
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
@@ -194,4 +226,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 https://gist.github.com/lordshashank/fb2fbd53b5520a862bd451e3603b4718
 
-https://github.com/lordshashank/filecoin-deals       
+https://github.com/lordshashank/filecoin-deals 
