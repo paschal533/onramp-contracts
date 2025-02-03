@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 import {MarketAPI} from "filecoin-solidity-api/contracts/v0.8/MarketAPI.sol";
 import {CommonTypes} from "filecoin-solidity-api/contracts/v0.8/types/CommonTypes.sol";
 import {MarketTypes} from "filecoin-solidity-api/contracts/v0.8/types/MarketTypes.sol";
 import {AccountTypes} from "filecoin-solidity-api/contracts/v0.8/types/AccountTypes.sol";
-import {CommonTypes} from "filecoin-solidity-api/contracts/v0.8/types/CommonTypes.sol";
 import {AccountCBOR} from "filecoin-solidity-api/contracts/v0.8/cbor/AccountCbor.sol";
 import {MarketCBOR} from "filecoin-solidity-api/contracts/v0.8/cbor/MarketCbor.sol";
 import {BytesCBOR} from "filecoin-solidity-api/contracts/v0.8/cbor/BytesCbor.sol";
@@ -18,14 +17,18 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
 import {IAxelarGateway} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol";
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 using CBOR for CBOR.CBORBuffer;
 
-contract DealClientAxl is AxelarExecutable {
+contract DealClientAxl is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     using AccountCBOR for *;
     using MarketCBOR for *;
 
-    IAxelarGasService public immutable gasService;
+    IAxelarGasService public gasService;
+    IAxelarGateway public gateway;
     uint64 public constant AUTHENTICATE_MESSAGE_METHOD_NUM = 2643134072;
     uint64 public constant DATACAP_RECEIVER_HOOK_METHOD_NUM = 3726118371;
     uint64 public constant MARKET_NOTIFY_DEAL_METHOD_NUM = 4186741094;
@@ -36,6 +39,11 @@ contract DealClientAxl is AxelarExecutable {
     uint256 public constant AXELAR_GAS_FEE = 100000000000000000; // Start with 0.1 FIL
 
     struct DestinationChain {
+        string chainName;
+        address destinationAddress;
+    }
+
+    struct ChainInfo {
         string chainName;
         address destinationAddress;
     }
@@ -51,13 +59,25 @@ contract DealClientAxl is AxelarExecutable {
     mapping(bytes => Status) public pieceStatus;
     mapping(bytes => uint256) public providerGasFunds; // Funds set aside for calling oracle by provider
     mapping(uint256 => DestinationChain) public chainIdToDestinationChain;
+    //mapping(uint256 => ChainInfo) public chainIdToDestinationChain;
 
-    constructor(
+     /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
         address _gateway,
         address _gasReceiver
-    ) AxelarExecutable(_gateway) {
+    ) public initializer {
+        __Ownable_init(msg.sender);
+        __UUPSUpgradeable_init();
+         
+        gateway = IAxelarGateway(_gateway);
         gasService = IAxelarGasService(_gasReceiver);
     }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function setDestinationChains(
         uint[] calldata chainIds,
@@ -143,6 +163,7 @@ contract DealClientAxl is AxelarExecutable {
         uint256 gasTarget,
         uint256 chainId
     ) internal {
+        // Calculate gas funds
         uint256 gasFunds = gasTarget;
         if (providerGasFunds[providerAddrData] >= gasTarget) {
             providerGasFunds[providerAddrData] -= gasTarget;
@@ -150,11 +171,14 @@ contract DealClientAxl is AxelarExecutable {
             gasFunds = providerGasFunds[providerAddrData];
             providerGasFunds[providerAddrData] = 0;
         }
-        string memory destinationChain = chainIdToDestinationChain[chainId]
-            .chainName;
+
+        // Get destination chain info
+        string memory destinationChain = chainIdToDestinationChain[chainId].chainName;
         string memory destinationAddress = addressToHexString(
             chainIdToDestinationChain[chainId].destinationAddress
         );
+
+        // Pay for gas
         gasService.payNativeGasForContractCall{value: gasFunds}(
             address(this),
             destinationChain,
@@ -162,14 +186,53 @@ contract DealClientAxl is AxelarExecutable {
             payload,
             msg.sender
         );
-        gateway().callContract(destinationChain, destinationAddress, payload);
+
+        // Make the cross-chain call
+        gateway.callContract(
+            destinationChain,
+            destinationAddress,
+            payload
+        );
     }
+
+    function addressToHexString(address addr) internal pure returns (string memory) {
+        bytes memory buffer = new bytes(40);
+        for(uint256 i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint256(uint160(addr)) / (2**(8*(19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            buffer[2*i] = char(hi);
+            buffer[2*i+1] = char(lo);
+        }
+        return string(abi.encodePacked("0x", buffer));
+    }
+
+    function char(bytes1 b) internal pure returns (bytes1) {
+        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+        else return bytes1(uint8(b) + 0x57);
+    }
+
+    // Base execute functions from previous implementation
+    function execute(
+        bytes32 commandId,
+        string calldata sourceChain,
+        string calldata sourceAddress,
+        bytes calldata payload
+    ) external {
+        bytes32 payloadHash = keccak256(payload);
+        if (!gateway.validateContractCall(commandId, sourceChain, sourceAddress, payloadHash)) {
+            revert("Invalid contract call");
+        }
+        _execute(commandId, sourceChain, sourceAddress, payload);
+        //emit Executed(commandId, sourceChain, sourceAddress, payload);
+    }
+
 
     function _execute(
         bytes32 commandId,
         string calldata sourceChain,
         string calldata sourceAddress,
-        bytes calldata payload) internal override{
+        bytes calldata payload) internal {
             //Do Nothing
     }
 
@@ -228,9 +291,10 @@ contract DealClientAxl is AxelarExecutable {
         return (0, codec, ret);
     }
 
-    function addressToHexString(
+    /**function addressToHexString(
         address _addr
     ) internal pure returns (string memory) {
         return Strings.toHexString(uint256(uint160(_addr)), 20);
-    }
+    }*/
+
 }

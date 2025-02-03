@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 import {Cid} from "../Cid.sol";
 import {TRUNCATOR} from "../Const.sol";
 import {DataAttestation} from "./Oracles.sol";
@@ -73,7 +77,7 @@ contract PODSIVerifier {
     }
 }
 
-contract OnRampContract is PODSIVerifier {
+contract OnRampContract is PODSIVerifier, Initializable, UUPSUpgradeable, OwnableUpgradeable {
     struct Offer {
         bytes commP;
         uint64 size;
@@ -86,14 +90,28 @@ contract OnRampContract is PODSIVerifier {
     // struct Payment {uint256 amount, IERC20 token}?
 
     event DataReady(Offer offer, uint64 id);
+
     uint64 private nextOfferId = 1;
     uint64 private nextAggregateID = 1;
     address public dataProofOracle;
+     
     mapping(uint64 => Offer) public offers;
     mapping(uint64 => uint64[]) public aggregations;
     mapping(uint64 => address) public aggregationPayout;
     mapping(uint64 => bool) public provenAggregations;
     mapping(bytes => uint64) public commPToAggregateID;
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize() public initializer {
+        __Ownable_init(msg.sender);
+        __UUPSUpgradeable_init();
+    }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function setOracle(address oracle_) external {
         if (dataProofOracle == address(0)) {

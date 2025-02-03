@@ -1,12 +1,13 @@
 import { ethers } from "hardhat";
+
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
 async function main() {
-  const proverAddressFilecoin = process.env.PROVER_CONTRACT_ADDRESS_DEST_CHAIN;
-  const oracleAddressLinea = process.env.ORACLE_CONTRACT_ADDRESS_SRC_CHAIN; 
-  const onrampAddressLinea = process.env.ONRAMP_CONTRACT_ADDRESS_SRC_CHAIN;
+  const proverAddressFilecoin = process.env.PROVER_PROXY_CONTRACT_ADDRESS_DEST_CHAIN;
+  const oracleAddressLinea = process.env.ORACLE_PROXY_CONTRACT_ADDRESS_SRC_CHAIN; 
+  const onrampAddressLinea = process.env.ONRAMP_PROXY_CONTRACT_ADDRESS_SRC_CHAIN;
 
   console.log("***** Start wiring Contracts on Source Chain *****");
   
@@ -17,7 +18,7 @@ async function main() {
   await setOnrampTx.wait();
   
   const oracleContract = await ethers.getContractAt("AxelarBridge", oracleAddressLinea);
-  const setOracleTx = await oracleContract.setSenderReceiver(proverAddressFilecoin,onrampAddressLinea);
+  const setOracleTx = await oracleContract.setSenderReceiver(proverAddressFilecoin, onrampAddressLinea);
   console.log("~*~*~ Setting sender & receiver to oracleContract at:", setOracleTx.hash);
   await setOracleTx.wait();
 }

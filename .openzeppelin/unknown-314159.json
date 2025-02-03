@@ -1,0 +1,240 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x64DB20cD818ca3cEc274b2456FE6B6e436B72cb6",
+      "txHash": "0xc1389551b0767c3c62c0fad4535d205112119aff6e9bd1bdf93a6dadf5bd3833",
+      "kind": "uups"
+    },
+    {
+      "address": "0x64C39F1d88d5Db7ad249295A1Bb91cE82053EBd9",
+      "txHash": "0xe054d6334312cedab0ef76d5408359f4928d4df1b97fa9d4f6bbeaa3ad8c13f8",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE22dDA1fFF0E60d1C97A646dB18A3D62F5A4629a",
+      "txHash": "0xf117d7d8cc9c5bbef63db3faa8176c282f38d881d9d9e57842c50f98ac94dd6f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x216e526AA85Ea76f10C9B14C7A355B033F759c4B",
+      "txHash": "0xe684c9ef913fad8c9dea42c1f90141c5d83d37c82c0cb8676f8e5b6a39a64e22",
+      "kind": "uups"
+    },
+    {
+      "address": "0x288bF39AE60bA8D58d2E614bf81Af5dF1A7D1223",
+      "txHash": "0x093535b92fe553c44768e9db4c8abc300532c40733017ab455d69c982c662c8b",
+      "kind": "uups"
+    },
+    {
+      "address": "0xe073A41d25F62A5b4F89B8a4EbD3A09E8FD9A3b2",
+      "txHash": "0xc67ab98102d3070f0dcb8affbc5ccf4e0a16e449e514188dc711e55178f5ec4e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3ec2E4f07F68B6708db012A47F7240cddf2a81A4",
+      "txHash": "0x8f2f356c42c7649f69ab14d8d63fad7bb742a462dd6d120e5de9f05c49e2420b",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "2f75c5f001ec4aa39da694ea4bfd1cb89555f5c288d37f10f091b765302bde04": {
+      "address": "0x0dD9A8940857E48809785f436B48A493b4Aae2ED",
+      "txHash": "0x31750a2f0ae7e1b30c8150a894ca504e10e31a56c57ac4ef80d1a71f35d560be",
+      "layout": {
+        "solcVersion": "0.8.22",
+        "storage": [
+          {
+            "label": "gasService",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IAxelarGasService)604",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:30"
+          },
+          {
+            "label": "gateway",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IAxelarGateway)669",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:31"
+          },
+          {
+            "label": "pieceDeals",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_bytes_memory_ptr,t_uint64)",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:58"
+          },
+          {
+            "label": "pieceStatus",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_bytes_memory_ptr,t_enum(Status)7781)",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:59"
+          },
+          {
+            "label": "providerGasFunds",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_bytes_memory_ptr,t_uint256)",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:60"
+          },
+          {
+            "label": "chainIdToDestinationChain",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint256,t_struct(DestinationChain)7771_storage)",
+            "contract": "DealClientAxl",
+            "src": "contracts\\destChain\\Prover-Axelar.sol:61"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)775_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)715_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_bytes_memory_ptr": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IAxelarGasService)604": {
+            "label": "contract IAxelarGasService",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IAxelarGateway)669": {
+            "label": "contract IAxelarGateway",
+            "numberOfBytes": "20"
+          },
+          "t_enum(Status)7781": {
+            "label": "enum DealClientAxl.Status",
+            "members": [
+              "None",
+              "DealPublished",
+              "DealActivated",
+              "DealTerminated"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_enum(Status)7781)": {
+            "label": "mapping(bytes => enum DealClientAxl.Status)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_uint256)": {
+            "label": "mapping(bytes => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes_memory_ptr,t_uint64)": {
+            "label": "mapping(bytes => uint64)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(DestinationChain)7771_storage)": {
+            "label": "mapping(uint256 => struct DealClientAxl.DestinationChain)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(DestinationChain)7771_storage": {
+            "label": "struct DealClientAxl.DestinationChain",
+            "members": [
+              {
+                "label": "chainName",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "destinationAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 import {MarketAPI} from "filecoin-solidity-api/contracts/v0.8/MarketAPI.sol";
 import {CommonTypes} from "filecoin-solidity-api/contracts/v0.8/types/CommonTypes.sol";

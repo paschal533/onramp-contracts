@@ -1,6 +1,6 @@
 // Taken from lib/raas-starter-kit/contracts/data-segment/Cid.sol lib/raas-starter-kit/contracts/data-segment/Cid.sol
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.22;
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";

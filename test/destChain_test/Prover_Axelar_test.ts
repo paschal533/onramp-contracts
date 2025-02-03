@@ -49,8 +49,8 @@ describe("DealClient and Bridge System", function () {
     // Deploy main contracts
     const DealClient = await ethers.getContractFactory("DealClientAxl");
     dealClient = await DealClient.deploy(
-      await mockGateway.getAddress(),
-      await mockGasService.getAddress()
+      //await mockGateway.getAddress(),
+      //await mockGasService.getAddress()
     );
 
     const ForwardingBridge = await ethers.getContractFactory(
@@ -62,7 +62,9 @@ describe("DealClient and Bridge System", function () {
     debugBridge = await DebugBridge.deploy();
 
     const AxelarBridge = await ethers.getContractFactory("AxelarBridge");
-    axelarBridge = await AxelarBridge.deploy(await mockGateway.getAddress());
+    axelarBridge = await AxelarBridge.deploy(
+      //await mockGateway.getAddress()
+    );
 
     const AxelarDebugBridge = await ethers.getContractFactory(
       "AxelarBridgeDebug"

@@ -1,11 +1,12 @@
 import { ethers } from "hardhat";
+
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
 async function main() {
-  const proverAddressFilecoin = process.env.PROVER_CONTRACT_ADDRESS_DEST_CHAIN;
-  const oracleAddressLinea = process.env.ORACLE_CONTRACT_ADDRESS_SRC_CHAIN; 
+  const proverAddressFilecoin = process.env.PROVER_PROXY_CONTRACT_ADDRESS_DEST_CHAIN;
+  const oracleAddressLinea = process.env.ORACLE_PROXY_CONTRACT_ADDRESS_SRC_CHAIN; 
 
   console.log("***** Start wiring Oracle Contract on Filecoin *****");
   // Get the deployed contract instance by name
