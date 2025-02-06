@@ -1,10 +1,6 @@
-import "@nomicfoundation/hardhat-toolbox";
-import "@nomicfoundation/hardhat-toolbox";
-
 import { HardhatUserConfig } from "hardhat/config";
-
+import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
-
 import "dotenv/config";
 
 // Determine if we are on testnet or mainnet
