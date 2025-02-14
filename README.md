@@ -36,7 +36,7 @@ Our onramp contracts act as a **bridge** between various blockchains (like Linea
 - **`AxelarBridge`** – Bridges messages via **Axelar**
 
 ✅ **Filecoin (Storage Destination)**
-- **`DealClientAxl`** – Receives data & initiates storage deals
+- **`DealClientAxl`** – Receives deal notification from Filecoin,  sends proof back to source chain. 
 
 ## Architecture
 
