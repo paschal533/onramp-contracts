@@ -1,6 +1,4 @@
-<h1 align="center">
-  On Ramp Contracts 🚀
-</h1>
+# On Ramp Contracts 🚀
 
 Bringing decentralized storage to every blockchain! This project enables **dApps to store data on Filecoin** from **multiple L1/L2 networks** using cross-chain smart contracts.
 
@@ -49,31 +47,6 @@ The cross-chain data bridge works through two main components deployed across ch
 
 2. **[xChain Client](https://github.com/FIL-Builders/xchainClient)**: 
 Monitoring storage requests from the source chain, aggregating data, and facilitating deal-making with storage providers or deal engines.
-
-## Project Structure
-```
-OnRamp-Contracts/
-├── contract-tools
-|   │── xchain
-|   │── client.bash
-|   │── deploy-onramp.fish
-|   │── easy-host.bash
-|   │── rand-files.bash
-├── contracts
-|   │── destChain
-|   │── sourceChain
-|   │── testHelperContracts
-|   │── Cid.sol
-|   │── Const.sol
-|   │── Token.sol
-├── deploy
-├── lib
-├── test
-├── .env.example
-├── README.md
-├── package.json
-└── ...
-```
 
 ## Getting Started
 
