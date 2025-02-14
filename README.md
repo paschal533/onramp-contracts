@@ -32,7 +32,7 @@ The cross-chain data bridge (aka, onramp contracts) allows applications on one b
 Our onramp contracts act as a **bridge** between various blockchains (like Linea, Avalanche, and Arbitrum) and **Filecoin** storage. The framework consists of:
 
 ✅ **Source Chains (L1/L2 networks)**
-- **`OnRampContract`** – Handles user deposits & cross-chain messaging
+- **`OnRampContract`** – Handles cross-chain storage requests & verification, and user payments.
 - **`AxelarBridge`** – Bridges messages via **Axelar**
 
 ✅ **Filecoin (Storage Destination)**
