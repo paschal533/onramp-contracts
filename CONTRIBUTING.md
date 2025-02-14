@@ -18,11 +18,11 @@ Must be one of the following:
 
 ### Scope
 
-Scopes should be used to add further detail to area of the project that is being committed to. The following is the list of supported scopes:
+Scopes should identify the specific component of the project being modified. The following are the supported scopes:
 
-- **contract**
-- **contracts-tool**
-- **test**
-- **web3**
-- **filecoin**
-- **hardhat**
+- **contract**: Changes to the core smart contracts
+- **bridge**: Changes to cross-chain bridging functionality
+- **deploy**: Deployment scripts and configurations
+- **tools**: Changes to contract tools and utilities
+- **test**: Test-related changes
+- **docs**: Documentation updates
