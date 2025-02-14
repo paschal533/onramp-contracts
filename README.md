@@ -23,11 +23,13 @@ Bringing decentralized storage to every blockchain! This project enables **dApps
 
 ## 🌍 Overview
 
-### What is a Cross-Chain Data Bridge?
-A cross-chain data bridge allows applications on one blockchain (source chain) to interact with and store data on another blockchain (destination chain). In the context of Onramp Contracts, this means enabling any blockchain to leverage Filecoin's decentralized storage capabilities.
+The cross-chain data bridge (aka, onramp contracts) allows applications on one blockchain (source chain) to store and retrieve data on the Filecoin decentralized network. This means that any blockchain can leverage Filecoin's decentralized storage capabilities for: 
 
-### What are Onramp Contracts?
-Our smart contracts act as a **bridge** between various blockchains (like Linea, Avalanche, and Arbitrum) and **Filecoin** storage. The framework consists of:
+- Cross-Chain Compatibility: Supports multiple L1 and L2 networks.
+- Verifiable Data Storage: Utilizes Filecoin's robust storage network.
+- Modular Architecture: Easily extendable to support additional networks and functionalities.
+
+Our onramp contracts act as a **bridge** between various blockchains (like Linea, Avalanche, and Arbitrum) and **Filecoin** storage. The framework consists of:
 
 ✅ **Source Chains (L1/L2 networks)**
 - **`OnRampContract`** – Handles user deposits & cross-chain messaging
