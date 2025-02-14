@@ -150,7 +150,8 @@ npx hardhat deploy --tags ConfigFilecoin --network filecoin && \
 npx hardhat deploy --tags ConfigSourceChain --network linea-sepolia
 ```
 
-## 🛠 Setting Up xChain Client
+## **🛠 Setting Up the Off-Chain Components (xChain Client)**
+The cross-chain data bridge requires running [xChain client](https://github.com/FIL-Builders/xchainClient) to process the storage requests and storages proof between the source chain and Filecoin.
 
 ### 1️⃣ Set Up Forge
 ```bash
