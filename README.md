@@ -40,14 +40,15 @@ Our onramp contracts act as a **bridge** between various blockchains (like Linea
 
 ## Architecture
 
-The system works through three main components deployed across chains:
+The cross-chain data bridge works through two main components deployed across chains:
 
-1. **Source Chain Contracts**: 
-   - OnRampContract from `Onramp.sol`: Manages data submissions and payment
-   - AxelarBridge from `Oracle.sol`: Handles cross-chain communication
-2. **Destination Chain Contract (Filecoin)**:
-   - DealClientAxl from `Prover-Axelar.sol`: Processes storage deals and manages data verification
-3. **xChain Client**: Coordinates the data transfer and deal-making process
+1. **Onramp Contracts**: 
+
+- Source Chain Contracts: `Onramp.sol` & `Oracle.sol`
+- Destination Chain Contract (Filecoin): `Prover.sol`
+
+2. **[xChain Client](https://github.com/FIL-Builders/xchainClient)**: 
+Monitoring storage requests from the source chain, aggregating data, and facilitating deal-making with storage providers or deal engines.
 
 ## Project Structure
 ```
