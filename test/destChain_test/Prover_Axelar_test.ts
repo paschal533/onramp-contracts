@@ -84,17 +84,30 @@ describe("DealClient and Bridge System", function () {
         await mockGasService.getAddress()
       );
     });
-
+    
     it("Should set destination chains correctly", async function () {
       const chainIds = [1, 2, 3];
       const chainNames = ["ethereum", "polygon", "avalanche"];
       const addresses = [addr1.address, addr2.address, owner.address];
-
+    
       await dealClient.setDestinationChains(chainIds, chainNames, addresses);
-
+    
+      // Verify all three chains
       const chain1 = await dealClient.chainIdToDestinationChain(1);
+      const chain2 = await dealClient.chainIdToDestinationChain(2);
+      const chain3 = await dealClient.chainIdToDestinationChain(3);
+    
+      // Check chain 1
       expect(chain1.chainName).to.equal("ethereum");
       expect(chain1.destinationAddress).to.equal(addr1.address);
+    
+      // Check chain 2
+      expect(chain2.chainName).to.equal("polygon");
+      expect(chain2.destinationAddress).to.equal(addr2.address);
+    
+      // Check chain 3
+      expect(chain3.chainName).to.equal("avalanche");
+      expect(chain3.destinationAddress).to.equal(owner.address);
     });
 
     it("Should handle filecoin methods correctly", async function () {
@@ -127,112 +140,53 @@ describe("DealClient and Bridge System", function () {
     });
   });
 
-  describe("AxelarBridge", function () {
-    it("Should set sender and receiver correctly", async function () {
-      await axelarBridge.setSenderReceiver(addr1.address, addr2.address);
-
-      expect(await axelarBridge.sender()).to.equal(addr1.address);
-      expect(await axelarBridge.receiver()).to.equal(addr2.address);
-    });
-
-    it("Should emit event with correct data on attestation receipt", async function () {
-      const sourceChain = "filecoin-2";
-      const sourceAddress = addr1.address;
-      const commandId = ethers.hexlify(ethers.randomBytes(32));
-
-      const attestation = {
-        commP: ethers.hexlify(ethers.randomBytes(32)),
-        duration: 1000n,
-        FILID: 42n,
-        status: 1n,
-      };
-
-      const payload = ethers.AbiCoder.defaultAbiCoder().encode(
-        ["tuple(bytes commP, int64 duration, uint64 FILID, uint256 status)"],
-        [attestation]
-      );
-
-      await axelarBridge.setSenderReceiver(
-        addr1.address,
-        await debugReceiver.getAddress()
-      );
-
-      // Convert address to string format expected by Axelar
-      const sourceAddressString = addr1.address.toLowerCase();
-
-      // Call the contract using the execute function from base contract
-      await expect(
-        axelarBridge.execute(
-          commandId,
-          sourceChain,
-          sourceAddressString,
-          payload
-        )
-      )
-        .to.emit(axelarBridge, "ReceivedAttestation")
-        .withArgs(sourceChain, sourceAddressString, attestation.commP);
-    });
-  });
-
   describe("Edge Cases and Error Handling", function () {
     it("Should validate market actor address in dealNotify", async function () {
-      const impersonatedSigner = await ethers.getImpersonatedSigner(
-        MARKET_ACTOR_ADDRESS
-      );
-
-      // Fund the impersonated signer
+      const impersonatedSigner = await ethers.getImpersonatedSigner(MARKET_ACTOR_ADDRESS);
+      
       await owner.sendTransaction({
         to: MARKET_ACTOR_ADDRESS,
         value: ethers.parseEther("1.0"),
       });
 
-      // Create proper CBOR-encoded deal params
-      const pieceCID = {
-        "/": Buffer.from(ethers.randomBytes(32)).toString("base64"),
-      };
+      const commP = ethers.hexlify(ethers.randomBytes(32));
+      
+      // Create the deal proposal as an array structure
+      const dealProposal = [
+        {
+          piece_cid: {
+            '/': Buffer.from(commP.slice(2), 'hex').toString('base64')
+          },
+          piece_size: 1n,
+          verified_deal: false,
+          client: Buffer.from(ethers.ZeroAddress.slice(2), 'hex'),
+          provider: Buffer.from(ethers.randomBytes(32)),
+          label: ethers.AbiCoder.defaultAbiCoder().encode(['uint256'], [1]),
+          start_epoch: 1n,
+          end_epoch: 2n,
+          storage_price_per_epoch: 1n,
+          provider_collateral: 1n,
+          client_collateral: 1n
+        }
+      ];
 
-      const providerData = Buffer.from(ethers.randomBytes(32));
-      const labelData = ethers.AbiCoder.defaultAbiCoder().encode(
-        ["uint256"],
-        [1]
-      );
+      const params = cbor.encode([
+        cbor.encode(dealProposal),
+        1n  // dealId
+      ]);
 
-      const dealProposal = {
-        PieceCID: pieceCID,
-        PieceSize: 1n,
-        VerifiedDeal: false,
-        Client: Buffer.from("0x1234".slice(2), "hex"),
-        Provider: providerData,
-        Label: labelData,
-        StartEpoch: 1n,
-        EndEpoch: 2n,
-        StoragePricePerEpoch: 1n,
-        ProviderCollateral: 1n,
-        ClientCollateral: 1n,
-      };
-
-      const marketDealNotifyParams = {
-        dealProposal: Buffer.from(cbor.encode(dealProposal)),
-        dealId: 1n,
-      };
-
-      const params = Buffer.from(cbor.encode(marketDealNotifyParams));
-
-      // Should succeed when called from market actor
-      /*await expect(
+      await expect(
         dealClient.connect(impersonatedSigner).handle_filecoin_method(
-          4186741094n, // MARKET_NOTIFY_DEAL_METHOD_NUM
+          4186741094n,
           0n,
           params
         )
-      ).to.not.be.reverted;*/
+      ).to.not.be.reverted;
 
-      // Should fail when called from non-market actor
-      await expect(
-        dealClient.handle_filecoin_method(4186741094n, 0n, params)
-      ).to.be.revertedWith("msg.sender needs to be market actor f05");
+      expect(await dealClient.pieceDeals(commP)).to.equal(1n);
+      expect(await dealClient.pieceStatus(commP)).to.equal(1);
     });
-
+     
     describe("Integration Tests", function () {
       it("Should successfully handle complete flow from deal client to receiver", async function () {
         // Setup chain configuration

@@ -11,6 +11,7 @@ import {
   AxelarBridge,
   DebugReceiver,
   MockGateway,
+  MockAxelarGateway,
 } from "../../typechain-types";
 
 describe("Bridge Contracts", function () {
@@ -21,6 +22,7 @@ describe("Bridge Contracts", function () {
   let axelarBridge: AxelarBridge;
   let debugReceiver: DebugReceiver;
   let mockGateway: MockGateway;
+  let mockGatewayAxl: MockAxelarGateway;
 
   // Signers
   let owner: HardhatEthersSigner;
@@ -42,6 +44,10 @@ describe("Bridge Contracts", function () {
     const MockGateway = await ethers.getContractFactory("MockGateway");
     mockGateway = await MockGateway.deploy();
 
+    // Deploy mock Axelar contracts
+    const MockGatewayAxl = await ethers.getContractFactory("MockAxelarGateway");
+    mockGatewayAxl = await MockGatewayAxl.deploy();
+
     // Deploy all contracts
     const ForwardingBridge = await ethers.getContractFactory(
       "ForwardingProofMockBridge"
@@ -59,7 +65,7 @@ describe("Bridge Contracts", function () {
     );
 
     const AxelarBridge = await ethers.getContractFactory("AxelarBridge");
-    axelarBridge = await AxelarBridge.deploy(await mockGateway.getAddress());
+    axelarBridge = await AxelarBridge.deploy(await mockGatewayAxl.getAddress());
 
     const DebugReceiver = await ethers.getContractFactory("DebugReceiver");
     debugReceiver = await DebugReceiver.deploy();
@@ -129,19 +135,52 @@ describe("Bridge Contracts", function () {
   });
 
   describe("AxelarBridge", function () {
-    it("should set sender and receiver correctly", async function () {
-      await axelarBridge.setSenderReceiver(
-        await sender.getAddress(),
-        await receiver.getAddress()
+    it("Should set sender and receiver correctly", async function () {
+      await axelarBridge.setSenderReceiver(sender.address, receiver.address);
+
+      expect(await axelarBridge.sender()).to.equal(sender.address);
+      expect(await axelarBridge.receiver()).to.equal(receiver.address);
+    });
+
+    it("Should emit event with correct data on attestation receipt", async function () {
+      const sourceChain = "filecoin-2";
+      const sourceAddress = sender.address;
+      const commandId = ethers.hexlify(ethers.randomBytes(32));
+
+      const attestation = {
+        commP: ethers.hexlify(ethers.randomBytes(32)),
+        duration: 1000n,
+        FILID: 42n,
+        status: 1n,
+      };
+
+      const payload = ethers.AbiCoder.defaultAbiCoder().encode(
+        ["tuple(bytes commP, int64 duration, uint64 FILID, uint256 status)"],
+        [attestation]
       );
 
-      expect(await axelarBridge.receiver()).to.equal(
-        await receiver.getAddress()
+      await axelarBridge.setSenderReceiver(
+        sender.address,
+        await debugReceiver.getAddress()
       );
-      expect(await axelarBridge.sender()).to.equal(await sender.getAddress());
+
+      // Convert address to string format expected by Axelar
+      const sourceAddressString = sender.address.toLowerCase();
+
+      // Call the contract using the execute function from base contract
+      await expect(
+        axelarBridge.execute(
+          commandId,
+          sourceChain,
+          sourceAddressString,
+          payload
+        )
+      )
+        .to.emit(axelarBridge, "ReceivedAttestation")
+        .withArgs(sourceChain, sourceAddressString, attestation.commP);
     });
   });
-
+  
   describe("DebugMockBridge", function () {
     it("should emit event with correct attestation data when conditions are met", async function () {
       const attestation = {
