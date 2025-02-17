@@ -4,8 +4,6 @@ Bringing decentralized storage to every blockchain! This project enables **dApps
 
 ## 📚 Table of Contents
 - [Overview](#overview)
-  - [What is a Cross-Chain Data Bridge?](#what-is-a-cross-chain-data-bridge)
-  - [What are Onramp Contracts?](#what-are-onramp-contracts)
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
